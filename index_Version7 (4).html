@@ -1,0 +1,264 @@
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>我的網站</title>
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding-top: 4.5rem; }
+    .main-links { margin-top: 3rem; }
+    .link-item { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
+    .delete-btn { padding: 0.25rem 0.65rem; font-size: 1rem; line-height: 1; }
+    /* 小恐龍彈窗樣式 */
+    #dinoModal .modal-dialog { max-width: 650px; }
+    #dino-game-canvas { background: #fff; border:1px solid #ccc; display: block; margin: 20px auto 0; }
+  </style>
+</head>
+<body>
+
+  <!-- 導覽列 -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">我的網站</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="切換選單">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="https://www.youtube.com/" target="_blank">YouTube</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://www.dbkk.cc/vtype/anime.html" target="_blank">獨播庫</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://chat.openai.com/" target="_blank">ChatGPT</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#code-section">依代碼顯示網頁</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主要內容 -->
+  <main class="container text-center">
+    <h1 class="mt-4">我的網站</h1>
+    <div class="main-links">
+      <p><a class="btn btn-danger btn-lg mb-3" href="https://www.youtube.com/" target="_blank">YouTube</a></p>
+      <p><a class="btn btn-success btn-lg mb-3" href="https://www.dbkk.cc/vtype/anime.html" target="_blank">獨播庫</a></p>
+      <p><a class="btn btn-info btn-lg mb-3" href="https://chat.openai.com/" target="_blank">ChatGPT</a></p>
+      <p><a class="btn btn-warning btn-lg mb-3" href="#code-section">依代碼顯示網頁</a></p>
+      <!-- 小恐龍遊戲按鈕 -->
+      <p><button class="btn btn-dark btn-lg mb-3" data-bs-toggle="modal" data-bs-target="#dinoModal">小恐龍遊戲</button></p>
+    </div>
+
+    <!-- 依代碼顯示網頁區塊 -->
+    <section id="code-section" class="mt-5">
+      <h2 class="mb-3">依代碼顯示網頁</h2>
+      <form class="mb-4" onsubmit="event.preventDefault(); goByCode();">
+        <div class="mb-3">
+          <label for="codeInput" class="form-label">請輸入代碼：</label>
+          <input type="text" class="form-control" id="codeInput" placeholder="請輸入代碼">
+        </div>
+        <button type="submit" class="btn btn-primary">前往</button>
+      </form>
+      <div id="codeResult" class="alert alert-info d-none"></div>
+    </section>
+
+    <!-- 新增：隨時加入連結區塊 -->
+    <section id="add-links-section" class="mt-5">
+      <h2 class="mb-3">隨時加入連結</h2>
+      <div class="mb-4">
+        <input type="text" id="customLinkInput" class="form-control mb-2" placeholder="請輸入要顯示的連結...">
+        <button id="addLinkBtn" class="btn btn-success btn-lg mb-2">新增連結</button>
+        <div id="linksList" class="mt-3"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 小恐龍遊戲 Modal -->
+  <div class="modal fade" id="dinoModal" tabindex="-1" aria-labelledby="dinoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="dinoModalLabel">小恐龍遊戲</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+        </div>
+        <div class="modal-body">
+          <p id="dino-info">按空白鍵跳躍，得分：<span id="dino-score">0</span></p>
+          <canvas id="dino-game-canvas" width="600" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 依代碼顯示網頁
+    function goByCode() {
+      var code = document.getElementById('codeInput').value.trim();
+      var resultDiv = document.getElementById('codeResult');
+      resultDiv.classList.remove('d-none');
+      if (code === "101228") {
+        resultDiv.innerHTML = '<a href="https://www.youtube.com/" target="_blank" class="btn btn-danger">前往 YouTube</a>';
+      } else if (code === "670805") {
+        resultDiv.innerHTML = '<a href="https://www.qimaoxs.com/" target="_blank" class="btn btn-success">前往七猫小说</a>';
+      } else if (code === "30057") {
+        resultDiv.innerHTML = '<a href="https://www.facebook.com/" target="_blank" class="btn btn-primary">前往 Facebook</a>';
+      } else if (code === "700731") {
+        resultDiv.innerHTML = '<a href="https://forms.gle/ZUDzE27Csg4TkEaJA" target="_blank" class="btn btn-info">前往 Google 表單</a>';
+      } else if (code === "1") {
+        resultDiv.innerHTML = '<a href="https://www.messenger.com/t/7509874632449888" target="_blank" class="btn btn-primary">前往 Messenger</a>';
+      } else if (code === "2") {
+        resultDiv.innerHTML = '<a href="https://gimy.ai/" target="_blank" class="btn btn-secondary">前往 Gimy</a>';
+      } else if (code === "cswuhun") {
+        resultDiv.innerHTML = '<a href="https://zh.moegirl.org.cn/%E5%88%9B%E4%B8%96%E7%A5%9E%E6%AD%A6%E9%AD%82" target="_blank" class="btn btn-warning">前往創世神武魂介紹</a>';
+      } else if (code === "16") {
+        resultDiv.innerHTML = '<a href="https://m.gm99.com/h5/page/pc?game_id=44&cid=gm99&scid=NewServer" target="_blank" class="btn btn-warning">前往斗羅大陸 H5 官方頁</a>';
+      } else {
+        resultDiv.innerText = "查無此代碼，請重新輸入。";
+      }
+    }
+
+    // 可動態加入/刪除自訂連結，並存 localStorage
+    function renderLinks() {
+      var linksList = document.getElementById('linksList');
+      linksList.innerHTML = "";
+      var links = JSON.parse(localStorage.getItem('customLinks') || '[]');
+      links.forEach(function(url, idx) {
+        var wrapper = document.createElement('div');
+        wrapper.className = "link-item";
+
+        var link = document.createElement('a');
+        link.href = url;
+        link.target = "_blank";
+        link.textContent = url;
+        link.className = "flex-grow-1 text-break";
+
+        var delBtn = document.createElement('button');
+        delBtn.className = "btn btn-sm btn-danger delete-btn";
+        delBtn.textContent = "刪除";
+        delBtn.onclick = function() {
+          links.splice(idx, 1);
+          localStorage.setItem('customLinks', JSON.stringify(links));
+          renderLinks();
+        };
+
+        wrapper.appendChild(link);
+        wrapper.appendChild(delBtn);
+        linksList.appendChild(wrapper);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      renderLinks();
+      document.getElementById('addLinkBtn').addEventListener('click', function() {
+        var url = document.getElementById('customLinkInput').value.trim();
+        var links = JSON.parse(localStorage.getItem('customLinks') || '[]');
+        var linksList = document.getElementById('linksList');
+        if (url) {
+          links.push(url);
+          localStorage.setItem('customLinks', JSON.stringify(links));
+          renderLinks();
+          document.getElementById('customLinkInput').value = "";
+        } else {
+          var alertDiv = document.createElement('div');
+          alertDiv.className = 'alert alert-warning mt-2';
+          alertDiv.textContent = "請輸入網址！";
+          linksList.appendChild(alertDiv);
+          setTimeout(function() {
+            linksList.removeChild(alertDiv);
+          }, 1500);
+        }
+      });
+    });
+
+    // 小恐龍遊戲主程式
+    let dinoGameInited = false;
+    let dinoGame, dinoCtx, dino, ground, gravity, jumpPower, cactus, score, speed, playing, dinoAnimationId;
+    function dinoGameInit() {
+      dinoGame = document.getElementById('dino-game-canvas');
+      dinoCtx = dinoGame.getContext('2d');
+      dino = {x: 50, y: 160, w: 40, h: 40, vy:0, jumping:false};
+      ground = 200; gravity = 0.8; jumpPower = -13;
+      cactus = {x: 600, y: 170, w: 20, h: 50};
+      score = 0; speed = 6; playing = true;
+      document.getElementById('dino-score').textContent = score;
+      document.getElementById('dino-info').innerHTML = '按空白鍵跳躍，得分：<span id="dino-score">0</span>';
+      cancelAnimationFrame(dinoAnimationId);
+      dinoGameUpdate();
+    }
+    function dinoDrawDino() {
+      dinoCtx.fillStyle = "#444";
+      dinoCtx.fillRect(dino.x, dino.y, dino.w, dino.h);
+      dinoCtx.fillStyle = "#fff";
+      dinoCtx.fillRect(dino.x+28, dino.y+10, 6, 6);
+      dinoCtx.fillStyle = "#222";
+      dinoCtx.fillRect(dino.x+30, dino.y+12, 2, 2);
+    }
+    function dinoDrawCactus() {
+      dinoCtx.fillStyle = "#228B22";
+      dinoCtx.fillRect(cactus.x, cactus.y, cactus.w, cactus.h);
+    }
+    function dinoResetCactus() {
+      cactus.x = 600 + Math.random()*200;
+      cactus.h = 40 + Math.random()*30;
+    }
+    function dinoGameUpdate() {
+      if (!playing) return;
+      dinoCtx.clearRect(0,0,dinoGame.width,dinoGame.height);
+      // 恐龍跳躍
+      if (dino.jumping) {
+        dino.vy += gravity;
+        dino.y += dino.vy;
+        if (dino.y >= 160) {
+          dino.y = 160; dino.jumping = false; dino.vy = 0;
+        }
+      }
+      // 仙人掌移動
+      cactus.x -= speed;
+      if (cactus.x < -20) {
+        dinoResetCactus();
+        score++;
+        document.getElementById('dino-score').textContent = score;
+        if (score % 5 === 0) speed += 1;
+      }
+      // 碰撞判斷
+      if (dino.x + dino.w > cactus.x && dino.x < cactus.x + cactus.w && dino.y + dino.h > cactus.y) {
+        playing = false;
+        document.getElementById('dino-info').innerHTML = `遊戲結束！最終得分：<span id="dino-score">${score}</span>，關閉視窗再重新點擊開始`;
+      }
+      dinoDrawDino();
+      dinoDrawCactus();
+      dinoCtx.fillStyle = "#bbb";
+      dinoCtx.fillRect(0, 200, 600, 2);
+      dinoAnimationId = requestAnimationFrame(dinoGameUpdate);
+    }
+    // Modal 開啟時初始化恐龍遊戲
+    var dinoModal = document.getElementById('dinoModal');
+    dinoModal.addEventListener('shown.bs.modal', function () {
+      dinoGameInit();
+      if (!dinoGameInited) {
+        document.addEventListener('keydown', dinoKeyDownHandler);
+        dinoGameInited = true;
+      }
+    });
+    // Modal 關閉時停止遊戲動畫
+    dinoModal.addEventListener('hidden.bs.modal', function () {
+      cancelAnimationFrame(dinoAnimationId);
+    });
+    function dinoKeyDownHandler(e){
+      if (document.getElementById('dinoModal').classList.contains('show')) {
+        if (e.code === 'Space' && !dino.jumping && playing) {
+          dino.jumping = true;
+          dino.vy = jumpPower;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
